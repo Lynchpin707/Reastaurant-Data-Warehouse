@@ -4,12 +4,11 @@ import random
 import os
 from datetime import datetime, timedelta
 
-output_dir = 'restaurant_raw_final'
+output_dir = 'data/raw'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# --- 1. EXPANDED MENU (30 ITEMS) ---
-# Includes intentional casing issues, nulls, and outliers
+
 menu_items = [
     # Main Courses (10)
     {'item_id': 1, 'name': 'Lamb Tagine', 'cat': 'Main', 'price': 95.0},
