@@ -1,0 +1,238 @@
+{
+  "datasets": [
+    {
+      "name": "74510824",
+      "displayName": "Server Revenue Summary by Staff",
+      "queryLines": [
+        "SELECT server_name, SUM(total_revenue) as sales_performance\n",
+        "FROM gold_restaurant.fact_sales\n",
+        "GROUP BY server_name"
+      ]
+    },
+    {
+      "name": "f6a1233a",
+      "displayName": "fact_sales",
+      "queryLines": [
+        "SELECT * FROM workspace.gold_restaurant.fact_sales"
+      ]
+    },
+    {
+      "name": "5c75cb00",
+      "displayName": "Item Category Sales Summary",
+      "queryLines": [
+        "SELECT\n",
+        "  item_category,\n",
+        "  SUM(total_revenue) as sales_performance\n",
+        "FROM\n",
+        "  workspace.gold_restaurant.fact_sales\n",
+        "GROUP BY\n",
+        "  item_category"
+      ],
+      "catalog": "workspace",
+      "schema": "gold_restaurant"
+    }
+  ],
+  "pages": [
+    {
+      "name": "ac7da0c2",
+      "displayName": "Untitled page 1",
+      "layout": [
+        {
+          "widget": {
+            "name": "750bd2ae",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "74510824",
+                  "fields": [
+                    {
+                      "name": "sales_performance",
+                      "expression": "`sales_performance`"
+                    },
+                    {
+                      "name": "server_name",
+                      "expression": "`server_name`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Sales Performance by Server (Pie)",
+                "showTitle": true
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sales_performance",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sales Performance"
+                },
+                "color": {
+                  "fieldName": "server_name",
+                  "legend": {
+                    "position": "right"
+                  },
+                  "displayName": "Server Name",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Maryem",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 4
+                        }
+                      }
+                    ]
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 7,
+            "y": 0,
+            "width": 5,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "49ab2d86",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5c75cb00",
+                  "fields": [
+                    {
+                      "name": "item_category",
+                      "expression": "`item_category`"
+                    },
+                    {
+                      "name": "sales_performance",
+                      "expression": "`sales_performance`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Sales by Item Category",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "item_category",
+                  "displayName": "Item Category",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "sales_performance",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "Sales Performance",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "item_category",
+                  "legend": {
+                    "position": "right"
+                  },
+                  "displayName": "Item Category",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 4,
+            "width": 10,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "11d6fbca",
+            "multilineTextboxSpec": {
+              "lines": [
+                ""
+              ]
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 0,
+            "width": 5,
+            "height": 4
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "5d05c721",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "6f5f6f66",
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {},
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

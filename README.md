@@ -4,6 +4,8 @@
 
 ![High level architecture](docs/diagrams/Highlevel_DW_Architecture.drawio.png)
 
+#### Project documentation 
+Check our project's [Style guide](docs/STYLEGUIDE.md) for better understanding of our code.
 #### How to use :
 
 1. Create your virtual environment :
