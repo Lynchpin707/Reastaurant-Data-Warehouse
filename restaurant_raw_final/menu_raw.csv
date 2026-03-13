@@ -1,0 +1,31 @@
+item_id,name,cat,price
+1,Lamb Tagine,Main,95.0
+2,Chicken Bastilla,Main,110.0
+3,COUSCOUS VEGETARIAN,Main,85.0
+4,Kefta Mkaoura,Main,80.0
+5,Beef Tanja,Main,120.0
+6,Fish Sayadia,Main,95.0
+7,Rfissa Chicken,Main,105.0
+8,Grilled Mechoui,Main,150.0
+9,Seafood Bastilla,Main,130.0
+10,Royal Couscous,Main,140.0
+11,Zaalouk,Appetizer,35.0
+12,Harira Soup,Appetizer,30.0
+13,Briotat Cheese,Appetizer,45.0
+14,Taktouka,Appetizer,35.0
+15,Mixed Olives,Appetizer,
+16,Mint Tea (Pot),Beverage,20.0
+17,Nespresso,Beverage,25.0
+18,Fresh Orange Juice,Beverage,500.0
+19,Avocado Shake,Beverage,35.0
+20,Mineral Water,Beverage,15.0
+21,Coca-Cola,Beverage,18.0
+22,Pomegranate Juice,Beverage,30.0
+23,French Fries,Side,20.0
+24,Moroccan Bread,Side,5.0
+25,Rice Pilaf,Side,25.0
+26,Side Salad,Side,15.0
+27,Chebakia,Dessert,15.0
+28,Almond Ghoriba,,12.0
+29,Orange with Cinnamon,Dessert,25.0
+30,Fekkas,Dessert,20.0
