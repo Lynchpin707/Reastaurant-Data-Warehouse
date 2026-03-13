@@ -2,11 +2,11 @@ item_id,name,cat,price
 1,Lamb Tagine,Main,95.0
 2,Chicken Bastilla,Main,110.0
 3,COUSCOUS VEGETARIAN,Main,85.0
-4,Kefta Mkaoura,Main,80.0
-5,Beef Tanja,Main,120.0
-6,Fish Sayadia,Main,95.0
+4,Kefta,Main,80.0
+5,Beef Tajine,Main,120.0
+6,Fish Tajine,Main,95.0
 7,Rfissa Chicken,Main,105.0
-8,Grilled Mechoui,Main,150.0
+8,Mechoui,Main,150.0
 9,Seafood Bastilla,Main,130.0
 10,Royal Couscous,Main,140.0
 11,Zaalouk,Appetizer,35.0
@@ -22,7 +22,7 @@ item_id,name,cat,price
 21,Coca-Cola,Beverage,18.0
 22,Pomegranate Juice,Beverage,30.0
 23,French Fries,Side,20.0
-24,Moroccan Bread,Side,5.0
+24,Tafernout,Side,5.0
 25,Rice Pilaf,Side,25.0
 26,Side Salad,Side,15.0
 27,Chebakia,Dessert,15.0

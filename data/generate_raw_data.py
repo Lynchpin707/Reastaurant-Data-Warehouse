@@ -14,11 +14,11 @@ menu_items = [
     {'item_id': 1, 'name': 'Lamb Tagine', 'cat': 'Main', 'price': 95.0},
     {'item_id': 2, 'name': 'Chicken Bastilla', 'cat': 'Main', 'price': 110.0},
     {'item_id': 3, 'name': 'COUSCOUS VEGETARIAN', 'cat': 'Main', 'price': 85.0},
-    {'item_id': 4, 'name': 'Kefta Mkaoura', 'cat': 'Main', 'price': 80.0},
-    {'item_id': 5, 'name': 'Beef Tanja', 'cat': 'Main', 'price': 120.0},
-    {'item_id': 6, 'name': 'Fish Sayadia', 'cat': 'Main', 'price': 95.0},
+    {'item_id': 4, 'name': 'Kefta', 'cat': 'Main', 'price': 80.0},
+    {'item_id': 5, 'name': 'Beef Tajine', 'cat': 'Main', 'price': 120.0},
+    {'item_id': 6, 'name': 'Fish Tajine', 'cat': 'Main', 'price': 95.0},
     {'item_id': 7, 'name': 'Rfissa Chicken', 'cat': 'Main', 'price': 105.0},
-    {'item_id': 8, 'name': 'Grilled Mechoui', 'cat': 'Main', 'price': 150.0},
+    {'item_id': 8, 'name': 'Mechoui', 'cat': 'Main', 'price': 150.0},
     {'item_id': 9, 'name': 'Seafood Bastilla', 'cat': 'Main', 'price': 130.0},
     {'item_id': 10, 'name': 'Royal Couscous', 'cat': 'Main', 'price': 140.0},
     # Appetizers (5)
@@ -37,7 +37,7 @@ menu_items = [
     {'item_id': 22, 'name': 'Pomegranate Juice', 'cat': 'Beverage', 'price': 30.0},
     # Sides (4)
     {'item_id': 23, 'name': 'French Fries', 'cat': 'Side', 'price': 20.0},
-    {'item_id': 24, 'name': 'Moroccan Bread', 'cat': 'Side', 'price': 5.0},
+    {'item_id': 24, 'name': 'Tafernout', 'cat': 'Side', 'price': 5.0},
     {'item_id': 25, 'name': 'Rice Pilaf', 'cat': 'Side', 'price': 25.0},
     {'item_id': 26, 'name': 'Side Salad', 'cat': 'Side', 'price': 15.0},
     # Desserts (4)
@@ -50,11 +50,11 @@ df_menu = pd.DataFrame(menu_items)
 
 # --- 2. EMPLOYEES ---
 employees_data = [
-    {'emp_id': 101, 'name': 'Amine', 'role': 'Manager', 'hourly_rate': 55.0},
-    {'emp_id': 102, 'name': 'Yasmine', 'role': 'waitress', 'hourly_rate': 22.0},
-    {'emp_id': 103, 'name': 'Driss', 'role': 'WAITER', 'hourly_rate': 22.0},
+    {'emp_id': 101, 'name': 'Maryem', 'role': 'Manager', 'hourly_rate': 55.0},
+    {'emp_id': 102, 'name': 'Aymane', 'role': 'chef', 'hourly_rate': 22.0},
+    {'emp_id': 103, 'name': 'Soufiane', 'role': 'WAITER', 'hourly_rate': 22.0},
     {'emp_id': 104, 'name': 'Lina', 'role': 'Chef', 'hourly_rate': 50.0},
-    {'emp_id': 105, 'name': 'Omar', 'role': 'waiter', 'hourly_rate': None}
+    {'emp_id': 105, 'name': 'Mouhsine', 'role': 'waiter', 'hourly_rate': None}
 ]
 df_employees = pd.DataFrame(employees_data)
 
@@ -70,12 +70,12 @@ for i in range(24 * 60): # 5 days
     })
 df_weather = pd.DataFrame(weather_records)
 
-# --- 4. ORDERS & DETAILS (With "Order Type" Issues) ---
+# --- 4. ORDERS & DETAILS ---
 orders = []
 details = []
 detail_id_counter = 1
 # Mix of valid and messy labels for service types
-service_types = ['Sur Place', 'TO GO', 'sur place', 'To Go', None] 
+service_types = ['On Site', 'TO GO', 'sur place', 'To Go', None] 
 
 for i in range(1, 15162):
     order_type = random.choice(service_types)

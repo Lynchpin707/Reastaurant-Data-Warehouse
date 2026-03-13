@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-data_dir = 'restaurant_raw_final'
+data_dir = 'data/raw'
 
 def explore_restaurant_data():
     # Load all tables
@@ -20,7 +20,7 @@ def explore_restaurant_data():
         # 1. Quick View
         print(f"Shape: {df.shape[0]} rows, {df.shape[1]} columns")
         
-        # 2. Check for Missing Values (Crucial for Data Engineering)
+        # 2. Check for Missing Values 
         null_counts = df.isnull().sum()
         if null_counts.any():
             print("\n[!] MISSING VALUES DETECTED:")
@@ -31,7 +31,7 @@ def explore_restaurant_data():
         if dup_count > 0:
             print(f"\n[!] DUPLICATE ROWS: {dup_count}")
 
-        # 4. Deep Dive into Specific Columns (The "Dirty" Parts)
+        # 4. Deep Dive into Specific Columns
         if 'menu' in file:
             print("\nTop 5 Most Expensive Items (Checking for Outliers):")
             print(df.nlargest(5, 'price')[['name', 'price']])
