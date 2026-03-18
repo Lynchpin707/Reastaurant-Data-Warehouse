@@ -53,11 +53,15 @@ employees_data = [
 ]
 df_employees = pd.DataFrame(employees_data)
 
-# --- 3. WEATHER LOGS (Schéma strict conservé) ---
+# --- 3. CONFIGURATION DU TEMPS (Août 2025 sur 6 mois) ---
+start_date = datetime(2025, 8, 1) # 1er Août 2025
+end_date = start_date + timedelta(days=184) # 184 jours = ~6 mois (jusqu'à fin Janvier 2026)
+
+# --- 4. WEATHER LOGS ---
 weather_records = []
-start_date = datetime(2026, 1, 1)
-# Génération sur 150 jours pour couvrir les 15k commandes
-for i in range(150 * 24): 
+total_hours = int((end_date - start_date).total_seconds() // 3600) + 24 # +24h de marge de sécurité
+
+for i in range(total_hours): 
     weather_records.append({
         'weather_id': i,
         'timestamp': start_date + timedelta(hours=i),
@@ -66,7 +70,7 @@ for i in range(150 * 24):
     })
 df_weather = pd.DataFrame(weather_records)
 
-# --- 4. ORDERS & DETAILS (Schéma strict conservé, distribution optimisée) ---
+# --- 5. ORDERS & DETAILS ---
 orders = []
 details = []
 detail_id_counter = 1
@@ -79,20 +83,23 @@ def get_weather_id(dt):
     return min(w_id, len(df_weather) - 1)
 
 order_id = 1
-current_time = start_date + timedelta(hours=8) # Ouverture à 8h
+current_time = start_date + timedelta(hours=8) # Ouverture à 8h le 1er Août
 
-while order_id <= 15161:
+# CHANGEMENT CLÉ : La boucle tourne tant qu'on n'a pas atteint la date de fin (6 mois plus tard)
+while current_time < end_date:
     hr = current_time.hour
     
     # DISTRIBUTION 1 : Pics d'affluence (Bimodal)
+    # J'ai légèrement augmenté les "gaps" (temps entre commandes) pour que sur 6 mois, 
+    # le volume final soit réaliste pour un restaurant de cette taille (environ 20k-30k commandes)
     if 12 <= hr <= 14:   # Rush du midi
-        gap = random.randint(1, 4)
+        gap = random.randint(3, 8)
     elif 19 <= hr <= 22: # Rush du soir
-        gap = random.randint(1, 3)
+        gap = random.randint(2, 6)
     elif 8 <= hr <= 11 or 15 <= hr <= 18: # Heures creuses
-        gap = random.randint(10, 25)
+        gap = random.randint(15, 30)
     else: # Très tard le soir
-        gap = random.randint(45, 90)
+        gap = random.randint(60, 120)
         
     current_time += timedelta(minutes=gap)
     
@@ -108,17 +115,13 @@ while order_id <= 15161:
         num_orders_in_slot = 1
 
     for _ in range(num_orders_in_slot):
-        if order_id > 15161: break
-        
         w_id = get_weather_id(current_time)
         weather_cond = df_weather.iloc[w_id]['condition']
         temp = df_weather.iloc[w_id]['temp']
         
-        # DISTRIBUTION 3 : Rotation des serveurs (Shifts) - INCLUANT LES CHEFS
-        # Matin : Soufiane (Waiter, 103), Aymane (Chef, 102), Manager (101), Kiosk (999)
-        # Soir : Mouhsine (Waiter, 105), Lina (Chef, 104), Manager (101), Kiosk (999)
+        # DISTRIBUTION 3 : Rotation des serveurs (Shifts)
         if 8 <= current_time.hour <= 16:
-            server = random.choice([101, 102, 103, 999]) 
+            server = random.choice([101, 102, 103,999]) 
         else:
             server = random.choice([101, 104, 105, 999])
             
@@ -165,7 +168,7 @@ while order_id <= 15161:
 df_orders = pd.DataFrame(orders)
 df_details = pd.DataFrame(details)
 
-# --- 5. EXPORT ---
+# --- 6. EXPORT ---
 tables = {'menu': df_menu, 'employees': df_employees, 'weather': df_weather, 'orders': df_orders, 'details': df_details}
 for name, df in tables.items():
     df.to_csv(f"{output_dir}/{name}_raw.csv", index=False)
