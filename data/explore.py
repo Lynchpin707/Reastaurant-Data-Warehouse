@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-data_dir = 'data/raw'
+data_dir = '/Volumes/workspace/restaurantdb/data'
 
 def explore_restaurant_data():
     # Load all tables

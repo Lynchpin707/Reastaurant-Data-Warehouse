@@ -4,7 +4,7 @@ import random
 import os
 from datetime import datetime, timedelta
 
-output_dir = 'data/raw'
+output_dir = '/Volumes/workspace/restaurantdb/data'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
@@ -173,3 +173,4 @@ tables = {'menu': df_menu, 'employees': df_employees, 'weather': df_weather, 'or
 for name, df in tables.items():
     df.to_csv(f"{output_dir}/{name}_raw.csv", index=False)
     print(f"Generated {name}_raw.csv - Rows: {len(df)}")
+    
