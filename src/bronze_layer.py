@@ -21,7 +21,7 @@ def ingest_to_bronze(source_db, table_name, target_schema):
     """
     print(f"Ingesting {source_db}.{table_name} into {target_schema}.{table_name}.")
     
-    df_raw = spark.table(f"{source_db}.{table_name}")
+    df_raw = spark.table(f"{source_db}.{table_name}_raw")
     
     df_bronze = df_raw.withColumn("ingestion_timestamp", current_timestamp()) \
                       .withColumn("source_system", lit(source_db))
