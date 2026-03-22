@@ -1,0 +1,349 @@
+{
+  "datasets": [
+    {
+      "name": "13169c52",
+      "displayName": "dim_date",
+      "queryLines": [
+        "SELECT * FROM workspace.gold_restaurant.dim_date"
+      ]
+    },
+    {
+      "name": "4a29c9e9",
+      "displayName": "dim_emp",
+      "queryLines": [
+        "SELECT * FROM workspace.gold_restaurant.dim_emp"
+      ]
+    },
+    {
+      "name": "5b276591",
+      "displayName": "dim_menu",
+      "queryLines": [
+        "SELECT * FROM workspace.gold_restaurant.dim_menu"
+      ]
+    },
+    {
+      "name": "198e0f25",
+      "displayName": "dim_sales",
+      "queryLines": [
+        "SELECT * FROM workspace.gold_restaurant.dim_sales"
+      ]
+    },
+    {
+      "name": "7fc3d2cf",
+      "displayName": "dim_time",
+      "queryLines": [
+        "SELECT * FROM workspace.gold_restaurant.dim_time"
+      ]
+    },
+    {
+      "name": "8879f44c",
+      "displayName": "dim_weather",
+      "queryLines": [
+        "SELECT * FROM workspace.gold_restaurant.dim_weather"
+      ]
+    },
+    {
+      "name": "f83f1d4c",
+      "displayName": "fact_sales",
+      "queryLines": [
+        "SELECT * FROM workspace.gold_restaurant.fact_sales"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "d5494559",
+      "displayName": "Untitled page",
+      "layout": [
+        {
+          "widget": {
+            "name": "ed388020",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f83f1d4c",
+                  "fields": [
+                    {
+                      "name": "server_id",
+                      "expression": "`server_id`"
+                    },
+                    {
+                      "name": "sum(total_amount)",
+                      "expression": "SUM(`total_amount`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`order_type` IN ('delivery', 'on site', 'to go')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "mark": {
+                "colors": [
+                  "#722132",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "server_id",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(total_amount)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "bbb70003",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f83f1d4c",
+                  "fields": [
+                    {
+                      "name": "sum(order_id)",
+                      "expression": "SUM(`order_id`)"
+                    },
+                    {
+                      "name": "order_type",
+                      "expression": "`order_type`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sum(order_id)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "order_type",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "on site",
+                        "color": "#385A45"
+                      },
+                      {
+                        "value": "delivery",
+                        "color": "#AA8438"
+                      },
+                      {
+                        "value": "to go",
+                        "color": "#722132"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "fbe923a8",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f83f1d4c",
+                  "fields": [
+                    {
+                      "name": "sum(total_amount)",
+                      "expression": "SUM(`total_amount`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_amount)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "76cc014c",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f83f1d4c",
+                  "fields": [
+                    {
+                      "name": "item_id",
+                      "expression": "`item_id`"
+                    },
+                    {
+                      "name": "sum(item_id)",
+                      "expression": "SUM(`item_id`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "mark": {
+                "colors": [
+                  "#385A45",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "item_id",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(item_id)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 6,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
