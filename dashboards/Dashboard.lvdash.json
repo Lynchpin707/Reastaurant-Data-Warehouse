@@ -63,18 +63,39 @@
       "name": "a95d7d3c",
       "displayName": "Top 5 Menu Item Sales",
       "queryLines": [
-        "SELECT\n",
-        "  m.name AS item_name,\n",
-        "  Count(f.order_id) AS total_orders\n",
-        "FROM\n",
+        "SELECT \n",
+        "  m.name, \n",
+        "  COUNT(f.order_id) AS total_orders\n",
+        "FROM \n",
         "  workspace.gold_restaurant.fact_sales f\n",
-        "    JOIN workspace.gold_restaurant.dim_menu m\n",
-        "      ON f.item_id = m.item_id\n",
-        "GROUP BY\n",
+        "JOIN \n",
+        "  workspace.gold_restaurant.dim_menu m ON f.item_id = m.item_id\n",
+        "JOIN \n",
+        "  workspace.gold_restaurant.dim_date d ON f.date_id = d.date_id\n",
+        "WHERE \n",
+        "  date_format(d.full_date, 'yyyy-MM-01') = :SelectedMonth \n",
+        "GROUP BY \n",
         "  m.name\n",
-        "ORDER BY\n",
+        "ORDER BY \n",
         "  total_orders DESC\n",
-        "LIMIT 5"
+        "LIMIT 5;"
+      ],
+      "parameters": [
+        {
+          "displayName": "SelectedMonth",
+          "keyword": "SelectedMonth",
+          "dataType": "DATE",
+          "defaultSelection": {
+            "values": {
+              "dataType": "DATE",
+              "values": [
+                {
+                  "value": "2025-12-01T00:00:00.000"
+                }
+              ]
+            }
+          }
+        }
       ]
     },
     {
@@ -113,12 +134,13 @@
         "FROM workspace.gold_restaurant.fact_sales s\n",
         "JOIN workspace.gold_restaurant.dim_weather w ON s.weather_id = w.weather_id\n",
         "GROUP BY 1\n",
-        "ORDER BY total_sales DESC;"
+        "ORDER BY total_sales DESC\n",
+        "LIMIT 3;"
       ]
     },
     {
       "name": "208d0938",
-      "displayName": "Top_5_waiters",
+      "displayName": "Top_1_waiters",
       "queryLines": [
         "SELECT \n",
         "  e.name  AS server_name,\n",
@@ -127,7 +149,7 @@
         "JOIN workspace.gold_restaurant.dim_emp e ON s.server_id = e.emp_id\n",
         "GROUP BY 1\n",
         "ORDER BY total_generated_revenue DESC\n",
-        "LIMIT 5;"
+        "LIMIT 1; "
       ]
     },
     {
@@ -173,6 +195,17 @@
         "GROUP BY 1, 2\n",
         "ORDER BY total_qty DESC;"
       ]
+    },
+    {
+      "name": "50918a80",
+      "displayName": "Month picker",
+      "queryLines": [
+        "SELECT DISTINCT \n",
+        "  date_format(full_date, 'MMMM yyyy') AS month_label,\n",
+        "  date_format(full_date, 'yyyy-MM-01') AS month_value\n",
+        "FROM workspace.gold_restaurant.dim_date\n",
+        "ORDER BY month_value DESC;"
+      ]
     }
   ],
   "pages": [
@@ -185,8 +218,13 @@
             "name": "2737d884",
             "multilineTextboxSpec": {
               "lines": [
-                ""
+                "<span style=\"text-align:center;display:block\"><span style=\"color: #E8ECF0;font-size: 60px;line-height: 1.5;font-family: Impact;\">**Restaurant Dashboard**</span></span>"
               ]
+            },
+            "specExtensions": {
+              "widgetBackgroundColor": {
+                "light": "#A6531E"
+              }
             }
           },
           "position": {
@@ -206,8 +244,8 @@
                   "datasetName": "a95d7d3c",
                   "fields": [
                     {
-                      "name": "item_name",
-                      "expression": "`item_name`"
+                      "name": "name",
+                      "expression": "`name`"
                     },
                     {
                       "name": "total_orders",
@@ -227,7 +265,7 @@
               },
               "mark": {
                 "colors": [
-                  "#FA8200",
+                  "#529E89",
                   {
                     "themeColorType": "visualizationColors",
                     "position": 2
@@ -269,7 +307,7 @@
               "widgetType": "bar",
               "encodings": {
                 "x": {
-                  "fieldName": "item_name",
+                  "fieldName": "name",
                   "axis": {
                     "labelAngle": 0
                   },
@@ -295,8 +333,8 @@
           "position": {
             "x": 0,
             "y": 2,
-            "width": 10,
-            "height": 6
+            "width": 7,
+            "height": 5
           }
         },
         {
@@ -325,12 +363,17 @@
                   "fieldName": "avg_order_value"
                 }
               }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "light": "#A6531E"
+              }
             }
           },
           "position": {
-            "x": 5,
-            "y": 9,
-            "width": 5,
+            "x": 8,
+            "y": 8,
+            "width": 4,
             "height": 1
           }
         },
@@ -339,14 +382,19 @@
             "name": "19bbeb51",
             "multilineTextboxSpec": {
               "lines": [
-                "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 24px;\">**Total Orders**</span></span>"
+                "<span style=\"text-align:center;display:block\"><span style=\"font-size: 24px;color: #E8ECF0;\">**Total Orders**</span></span>"
               ]
+            },
+            "specExtensions": {
+              "widgetBackgroundColor": {
+                "light": "#A6531E"
+              }
             }
           },
           "position": {
-            "x": 0,
-            "y": 8,
-            "width": 5,
+            "x": 4,
+            "y": 7,
+            "width": 4,
             "height": 1
           }
         },
@@ -376,12 +424,17 @@
                   "fieldName": "total_orders"
                 }
               }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "light": "#A6531E"
+              }
             }
           },
           "position": {
-            "x": 5,
-            "y": 8,
-            "width": 5,
+            "x": 8,
+            "y": 7,
+            "width": 4,
             "height": 1
           }
         },
@@ -390,14 +443,19 @@
             "name": "0eac3d67",
             "multilineTextboxSpec": {
               "lines": [
-                "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 24px;\">**Average Order Value**</span></span>"
+                "<span style=\"text-align:center;display:block\"><span style=\"font-size: 24px;color: #E8ECF0;\">**Average Order Value**</span></span>"
               ]
+            },
+            "specExtensions": {
+              "widgetBackgroundColor": {
+                "light": "#A6531E"
+              }
             }
           },
           "position": {
-            "x": 0,
-            "y": 9,
-            "width": 5,
+            "x": 4,
+            "y": 8,
+            "width": 4,
             "height": 1
           }
         },
@@ -427,12 +485,17 @@
                   "fieldName": "total_revenue"
                 }
               }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "light": "#A6531E"
+              }
             }
           },
           "position": {
-            "x": 5,
-            "y": 10,
-            "width": 5,
+            "x": 8,
+            "y": 9,
+            "width": 4,
             "height": 1
           }
         },
@@ -441,14 +504,19 @@
             "name": "c30813da",
             "multilineTextboxSpec": {
               "lines": [
-                "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 24px;\">**Total Revenu**</span></span>"
+                "<span style=\"text-align:center;display:block\"><span style=\"font-size: 24px;color: #E8ECF0;\">**Total Revenu**</span></span>"
               ]
+            },
+            "specExtensions": {
+              "widgetBackgroundColor": {
+                "light": "#A6531E"
+              }
             }
           },
           "position": {
-            "x": 0,
-            "y": 10,
-            "width": 5,
+            "x": 4,
+            "y": 9,
+            "width": 4,
             "height": 1
           }
         },
@@ -476,6 +544,51 @@
             ],
             "spec": {
               "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Revenue by time of the day"
+              },
+              "mark": {
+                "colors": [
+                  "#529E89",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
               "widgetType": "bar",
               "encodings": {
                 "x": {
@@ -503,9 +616,9 @@
             }
           },
           "position": {
-            "x": 0,
-            "y": 11,
-            "width": 5,
+            "x": 4,
+            "y": 10,
+            "width": 4,
             "height": 6
           }
         },
@@ -533,6 +646,10 @@
             ],
             "spec": {
               "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Orders per Weather Condition"
+              },
               "widgetType": "pie",
               "encodings": {
                 "angle": {
@@ -544,22 +661,75 @@
                 "color": {
                   "fieldName": "condition",
                   "scale": {
-                    "type": "categorical"
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "partly cloudy",
+                        "color": "#8C2015"
+                      },
+                      {
+                        "value": "rainy",
+                        "color": "#529E89"
+                      },
+                      {
+                        "value": "windy",
+                        "color": "#2E637B"
+                      },
+                      {
+                        "value": "sunny",
+                        "color": "#013B4D"
+                      }
+                    ]
                   }
+                },
+                "label": {
+                  "show": true
                 }
               }
             }
           },
           "position": {
-            "x": 5,
-            "y": 11,
-            "width": 5,
+            "x": 8,
+            "y": 10,
+            "width": 4,
             "height": 6
           }
         },
         {
           "widget": {
-            "name": "top-5-servers-of-the-month",
+            "name": "bef5f570",
+            "multilineTextboxSpec": {
+              "lines": [
+                "![](https://raw.githubusercontent.com/Lynchpin707/Reastaurant-Data-Warehouse/main/docs/Illustrations/Atay.jpg)"
+              ]
+            }
+          },
+          "position": {
+            "x": 7,
+            "y": 2,
+            "width": 2,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "c6254cd4",
+            "multilineTextboxSpec": {
+              "lines": [
+                "![](https://github.com/Lynchpin707/Reastaurant-Data-Warehouse/blob/main/docs/Illustrations/moroccan_cuisine_x9.png?raw=true)"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 7,
+            "width": 4,
+            "height": 9
+          }
+        },
+        {
+          "widget": {
+            "name": "e991405a",
             "queries": [
               {
                 "name": "main_query",
@@ -567,12 +737,12 @@
                   "datasetName": "208d0938",
                   "fields": [
                     {
-                      "name": "server_name",
-                      "expression": "`server_name`"
-                    },
-                    {
                       "name": "total_generated_revenue",
                       "expression": "`total_generated_revenue`"
+                    },
+                    {
+                      "name": "server_name",
+                      "expression": "`server_name`"
                     }
                   ],
                   "disaggregated": true
@@ -581,32 +751,51 @@
             ],
             "spec": {
               "version": 2,
-              "frame": {
-                "showTitle": true,
-                "title": "TOP 5 servers of the month",
-                "showDescription": false,
-                "headerAlignment": "center"
-              },
-              "widgetType": "table",
+              "widgetType": "counter",
               "encodings": {
-                "columns": [
-                  {
-                    "fieldName": "server_name",
-                    "contentAlignment": "center"
-                  },
-                  {
-                    "fieldName": "total_generated_revenue",
-                    "contentAlignment": "center"
-                  }
-                ]
+                "value": {
+                  "fieldName": "server_name"
+                },
+                "target": {
+                  "fieldName": "total_generated_revenue",
+                  "rowNumber": 0
+                }
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "light": "#A6531E"
               }
             }
           },
           "position": {
-            "x": 10,
+            "x": 9,
+            "y": 4,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "76f967dd",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block\"><span style=\"font-size:30px;color:#E8ECF0\">**EMPLOYEE OF THE&#32;**</span></span>\n",
+                "\n",
+                "<span style=\"text-align:center;display:block\"><span style=\"font-size:30px;color:#E8ECF0\">**MONTH**</span></span>"
+              ]
+            },
+            "specExtensions": {
+              "widgetBackgroundColor": {
+                "light": "#A6531E"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
             "y": 2,
-            "width": 2,
-            "height": 4
+            "width": 3,
+            "height": 2
           }
         }
       ],
@@ -616,6 +805,49 @@
     {
       "name": "cc19302b",
       "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "d6d9cb0a",
+            "queries": [
+              {
+                "name": "parameter_dashboards/01f125f2497a174bbfb206af1b5619a0/datasets/01f125f2e40413c38f29d7518f4c3d34_SelectedMonth",
+                "query": {
+                  "datasetName": "a95d7d3c",
+                  "parameters": [
+                    {
+                      "name": "SelectedMonth",
+                      "keyword": "SelectedMonth"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true
+              },
+              "widgetType": "filter-date-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "parameterName": "SelectedMonth",
+                    "queryName": "parameter_dashboards/01f125f2497a174bbfb206af1b5619a0/datasets/01f125f2e40413c38f29d7518f4c3d34_SelectedMonth"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
       "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
       "layoutVersion": "GRID_V1"
     }
