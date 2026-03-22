@@ -2,9 +2,19 @@
   "datasets": [
     {
       "name": "13169c52",
-      "displayName": "dim_date",
+      "displayName": "Hourly Sales by Time",
       "queryLines": [
-        "SELECT * FROM workspace.gold_restaurant.dim_date"
+        "SELECT\n",
+        "  t.hour,\n",
+        "  SUM(f.total_amount) as total_sales\n",
+        "FROM\n",
+        "  workspace.gold_restaurant.fact_sales f\n",
+        "    JOIN workspace.gold_restaurant.dim_time t\n",
+        "      ON f.time_id = t.time_id\n",
+        "GROUP BY\n",
+        "  t.hour\n",
+        "ORDER BY\n",
+        "  t.hour"
       ]
     },
     {
@@ -48,45 +58,176 @@
       "queryLines": [
         "SELECT * FROM workspace.gold_restaurant.fact_sales"
       ]
+    },
+    {
+      "name": "a95d7d3c",
+      "displayName": "Top 5 Menu Item Sales",
+      "queryLines": [
+        "SELECT\n",
+        "  m.name AS item_name,\n",
+        "  Count(f.order_id) AS total_orders\n",
+        "FROM\n",
+        "  workspace.gold_restaurant.fact_sales f\n",
+        "    JOIN workspace.gold_restaurant.dim_menu m\n",
+        "      ON f.item_id = m.item_id\n",
+        "GROUP BY\n",
+        "  m.name\n",
+        "ORDER BY\n",
+        "  total_orders DESC\n",
+        "LIMIT 5"
+      ]
+    },
+    {
+      "name": "b75b0e1c",
+      "displayName": "High-level KPIs",
+      "queryLines": [
+        "SELECT \n",
+        "  SUM(total_amount) AS total_revenue,\n",
+        "  COUNT(DISTINCT order_id) AS total_orders,\n",
+        "  SUM(total_amount) / COUNT(DISTINCT order_id) AS avg_order_value\n",
+        "FROM workspace.gold_restaurant.fact_sales;"
+      ]
+    },
+    {
+      "name": "65e56929",
+      "displayName": "Revenue by time of the day",
+      "queryLines": [
+        "SELECT \n",
+        "  t.day_time,\n",
+        "  SUM(s.total_amount) AS revenue\n",
+        "FROM workspace.gold_restaurant.fact_sales s\n",
+        "JOIN workspace.gold_restaurant.dim_time t ON s.time_id = t.time_id\n",
+        "GROUP BY 1\n",
+        "ORDER BY revenue DESC;"
+      ]
+    },
+    {
+      "name": "50d420df",
+      "displayName": "Sales per weather",
+      "queryLines": [
+        "SELECT \n",
+        "  w.condition,\n",
+        "  SUM(s.total_amount) AS total_sales,\n",
+        "  AVG(s.qty) AS avg_items_per_order,\n",
+        "  COUNT(order_id) AS number_of_orders\n",
+        "FROM workspace.gold_restaurant.fact_sales s\n",
+        "JOIN workspace.gold_restaurant.dim_weather w ON s.weather_id = w.weather_id\n",
+        "GROUP BY 1\n",
+        "ORDER BY total_sales DESC;"
+      ]
+    },
+    {
+      "name": "208d0938",
+      "displayName": "Top_5_waiters",
+      "queryLines": [
+        "SELECT \n",
+        "  e.name  AS server_name,\n",
+        "  SUM(s.total_amount) AS total_generated_revenue\n",
+        "FROM workspace.gold_restaurant.fact_sales s\n",
+        "JOIN workspace.gold_restaurant.dim_emp e ON s.server_id = e.emp_id\n",
+        "GROUP BY 1\n",
+        "ORDER BY total_generated_revenue DESC\n",
+        "LIMIT 5;"
+      ]
+    },
+    {
+      "name": "50ed4533",
+      "displayName": "Peak Hours heatmap",
+      "queryLines": [
+        "SELECT \n",
+        "  d.day_name_of_week,\n",
+        "  t.hour,\n",
+        "  COUNT(DISTINCT s.order_id) AS order_count\n",
+        "FROM workspace.gold_restaurant.fact_sales s\n",
+        "JOIN workspace.gold_restaurant.dim_date d ON s.date_id = d.date_id\n",
+        "JOIN workspace.gold_restaurant.dim_time t ON s.time_id = t.time_id\n",
+        "GROUP BY 1, 2\n",
+        "ORDER BY d.day_name_of_week, t.hour;"
+      ]
+    },
+    {
+      "name": "dd4b3f73",
+      "displayName": "Top_10_selling_items",
+      "queryLines": [
+        "SELECT \n",
+        "  m.name,\n",
+        "  SUM(s.qty) AS total_quantity_sold\n",
+        "FROM workspace.gold_restaurant.fact_sales s\n",
+        "JOIN workspace.gold_restaurant.dim_menu m ON s.item_id = m.item_id\n",
+        "GROUP BY 1\n",
+        "ORDER BY total_quantity_sold DESC\n",
+        "LIMIT 10;"
+      ]
+    },
+    {
+      "name": "57fa2d16",
+      "displayName": "weekend_vs_weekday",
+      "queryLines": [
+        "SELECT \n",
+        "  m.name,\n",
+        "  d.is_weekend,\n",
+        "  SUM(s.qty) AS total_qty\n",
+        "FROM workspace.gold_restaurant.fact_sales s\n",
+        "JOIN workspace.gold_restaurant.dim_date d ON s.date_id = d.date_id\n",
+        "JOIN workspace.gold_restaurant.dim_menu m ON s.item_id = m.item_id\n",
+        "GROUP BY 1, 2\n",
+        "ORDER BY total_qty DESC;"
+      ]
     }
   ],
   "pages": [
     {
       "name": "d5494559",
-      "displayName": "Untitled page",
+      "displayName": "Dashboard",
       "layout": [
         {
           "widget": {
-            "name": "ed388020",
+            "name": "2737d884",
+            "multilineTextboxSpec": {
+              "lines": [
+                ""
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "most-popular-items",
             "queries": [
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "f83f1d4c",
+                  "datasetName": "a95d7d3c",
                   "fields": [
                     {
-                      "name": "server_id",
-                      "expression": "`server_id`"
+                      "name": "item_name",
+                      "expression": "`item_name`"
                     },
                     {
-                      "name": "sum(total_amount)",
-                      "expression": "SUM(`total_amount`)"
+                      "name": "total_orders",
+                      "expression": "`total_orders`"
                     }
                   ],
-                  "filters": [
-                    {
-                      "expression": "`order_type` IN ('delivery', 'on site', 'to go')"
-                    }
-                  ],
-                  "disaggregated": false
+                  "disaggregated": true
                 }
               }
             ],
             "spec": {
               "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Most Popular Items",
+                "headerAlignment": "center"
+              },
               "mark": {
                 "colors": [
-                  "#722132",
+                  "#FA8200",
                   {
                     "themeColorType": "visualizationColors",
                     "position": 2
@@ -128,104 +269,51 @@
               "widgetType": "bar",
               "encodings": {
                 "x": {
-                  "fieldName": "server_id",
+                  "fieldName": "item_name",
+                  "axis": {
+                    "labelAngle": 0
+                  },
                   "scale": {
-                    "type": "categorical"
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y"
+                    }
                   }
                 },
                 "y": {
-                  "fieldName": "sum(total_amount)",
+                  "fieldName": "total_orders",
                   "scale": {
                     "type": "quantitative"
                   }
+                },
+                "label": {
+                  "show": false
                 }
               }
             }
           },
           "position": {
             "x": 0,
-            "y": 0,
-            "width": 6,
+            "y": 2,
+            "width": 10,
             "height": 6
           }
         },
         {
           "widget": {
-            "name": "bbb70003",
+            "name": "ffef7bc8",
             "queries": [
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "f83f1d4c",
+                  "datasetName": "b75b0e1c",
                   "fields": [
                     {
-                      "name": "sum(order_id)",
-                      "expression": "SUM(`order_id`)"
-                    },
-                    {
-                      "name": "order_type",
-                      "expression": "`order_type`"
+                      "name": "avg_order_value",
+                      "expression": "`avg_order_value`"
                     }
                   ],
-                  "disaggregated": false
-                }
-              }
-            ],
-            "spec": {
-              "version": 3,
-              "widgetType": "pie",
-              "encodings": {
-                "angle": {
-                  "fieldName": "sum(order_id)",
-                  "scale": {
-                    "type": "quantitative"
-                  }
-                },
-                "color": {
-                  "fieldName": "order_type",
-                  "scale": {
-                    "type": "categorical",
-                    "mappings": [
-                      {
-                        "value": "on site",
-                        "color": "#385A45"
-                      },
-                      {
-                        "value": "delivery",
-                        "color": "#AA8438"
-                      },
-                      {
-                        "value": "to go",
-                        "color": "#722132"
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          },
-          "position": {
-            "x": 6,
-            "y": 0,
-            "width": 6,
-            "height": 6
-          }
-        },
-        {
-          "widget": {
-            "name": "fbe923a8",
-            "queries": [
-              {
-                "name": "main_query",
-                "query": {
-                  "datasetName": "f83f1d4c",
-                  "fields": [
-                    {
-                      "name": "sum(total_amount)",
-                      "expression": "SUM(`total_amount`)"
-                    }
-                  ],
-                  "disaggregated": false
+                  "disaggregated": true
                 }
               }
             ],
@@ -234,109 +322,301 @@
               "widgetType": "counter",
               "encodings": {
                 "value": {
-                  "fieldName": "sum(total_amount)"
+                  "fieldName": "avg_order_value"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 5,
+            "y": 9,
+            "width": 5,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "19bbeb51",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 24px;\">**Total Orders**</span></span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 8,
+            "width": 5,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "9dfa9850",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "b75b0e1c",
+                  "fields": [
+                    {
+                      "name": "total_orders",
+                      "expression": "`total_orders`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "total_orders"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 5,
+            "y": 8,
+            "width": 5,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "0eac3d67",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 24px;\">**Average Order Value**</span></span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 5,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "ff7d8d14",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "b75b0e1c",
+                  "fields": [
+                    {
+                      "name": "total_revenue",
+                      "expression": "`total_revenue`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "total_revenue"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 5,
+            "y": 10,
+            "width": 5,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "c30813da",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 24px;\">**Total Revenu**</span></span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 10,
+            "width": 5,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "2c4172a2",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "65e56929",
+                  "fields": [
+                    {
+                      "name": "day_time",
+                      "expression": "`day_time`"
+                    },
+                    {
+                      "name": "revenue",
+                      "expression": "`revenue`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "day_time",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Morning",
+                        "Afternoon",
+                        "Evening",
+                        "Night"
+                      ]
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "revenue",
+                  "scale": {
+                    "type": "quantitative"
+                  }
                 }
               }
             }
           },
           "position": {
             "x": 0,
-            "y": 6,
-            "width": 6,
+            "y": 11,
+            "width": 5,
             "height": 6
           }
         },
         {
           "widget": {
-            "name": "76cc014c",
+            "name": "7e2cbdde",
             "queries": [
               {
                 "name": "main_query",
                 "query": {
-                  "datasetName": "f83f1d4c",
+                  "datasetName": "50d420df",
                   "fields": [
                     {
-                      "name": "item_id",
-                      "expression": "`item_id`"
+                      "name": "number_of_orders",
+                      "expression": "`number_of_orders`"
                     },
                     {
-                      "name": "sum(item_id)",
-                      "expression": "SUM(`item_id`)"
+                      "name": "condition",
+                      "expression": "`condition`"
                     }
                   ],
-                  "disaggregated": false
+                  "disaggregated": true
                 }
               }
             ],
             "spec": {
               "version": 3,
-              "mark": {
-                "colors": [
-                  "#385A45",
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 2
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 3
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 4
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 5
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 6
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 7
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 8
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 9
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 10
-                  }
-                ]
-              },
-              "widgetType": "bar",
+              "widgetType": "pie",
               "encodings": {
-                "x": {
-                  "fieldName": "item_id",
+                "angle": {
+                  "fieldName": "number_of_orders",
                   "scale": {
                     "type": "quantitative"
                   }
                 },
-                "y": {
-                  "fieldName": "sum(item_id)",
+                "color": {
+                  "fieldName": "condition",
                   "scale": {
-                    "type": "quantitative"
+                    "type": "categorical"
                   }
                 }
               }
             }
           },
           "position": {
-            "x": 6,
-            "y": 6,
-            "width": 6,
+            "x": 5,
+            "y": 11,
+            "width": 5,
             "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "top-5-servers-of-the-month",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "208d0938",
+                  "fields": [
+                    {
+                      "name": "server_name",
+                      "expression": "`server_name`"
+                    },
+                    {
+                      "name": "total_generated_revenue",
+                      "expression": "`total_generated_revenue`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "TOP 5 servers of the month",
+                "showDescription": false,
+                "headerAlignment": "center"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "server_name",
+                    "contentAlignment": "center"
+                  },
+                  {
+                    "fieldName": "total_generated_revenue",
+                    "contentAlignment": "center"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 10,
+            "y": 2,
+            "width": 2,
+            "height": 4
           }
         }
       ],
       "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "cc19302b",
+      "displayName": "Global Filters",
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
       "layoutVersion": "GRID_V1"
     }
   ],
