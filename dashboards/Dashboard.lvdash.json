@@ -133,6 +133,7 @@
         "  COUNT(order_id) AS number_of_orders\n",
         "FROM workspace.gold_restaurant.fact_sales s\n",
         "JOIN workspace.gold_restaurant.dim_weather w ON s.weather_id = w.weather_id\n",
+        "where order_type = 'delivery'\n",
         "GROUP BY 1\n",
         "ORDER BY total_sales DESC\n",
         "LIMIT 3;"
@@ -648,7 +649,7 @@
               "version": 3,
               "frame": {
                 "showTitle": true,
-                "title": "Orders per Weather Condition"
+                "title": "Delivery orders per Weather Condition"
               },
               "widgetType": "pie",
               "encodings": {
@@ -683,7 +684,10 @@
                   }
                 },
                 "label": {
-                  "show": true
+                  "show": true,
+                  "text": {
+                    "fieldName": "number_of_orders"
+                  }
                 }
               }
             }
